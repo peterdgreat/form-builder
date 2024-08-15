@@ -7,10 +7,22 @@ const Login = ({ setToken }) => {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
+  // const handleLogin = async () => {
+  //   try {
+  //     const data = await loginUser(email, password);
+  //     console.log('Token received:', data.token); // Debugging statement
+  //     setToken(data.token);
+  //     navigate('/form-builder');
+  //   } catch (error) {
+  //     alert('Login failed.');
+  //     console.error(error);
+  //   }
+  // };
   const handleLogin = async () => {
     try {
       const data = await loginUser(email, password);
-      console.log('Token received:', data.token); // Debugging statement
+      console.log('Token received:', data.token); // Debugging
+      localStorage.setItem('token', data.token);
       setToken(data.token);
       navigate('/form-builder');
     } catch (error) {

@@ -1,6 +1,7 @@
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
-const API_URL = 'http://localhost:3001';
+export const API_URL = 'http://localhost:3001';
 
 // User Registration
 export const registerUser = async (email, password) => {
@@ -10,12 +11,18 @@ export const registerUser = async (email, password) => {
   return response.data;
 };
 
-// User Login
+
+
 export const loginUser = async (email, password) => {
-  const response = await axios.post(`${API_URL}/users/sign_in`, {
-    user: { email, password }
-  });
-  return response.data;
+  try {
+    const response = await axios.post(`${API_URL}/users/sign_in`, {
+      user: { email, password }
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error logging in:', error);
+    throw error;
+  }
 };
 
 const getAuthToken = () => localStorage.getItem('token'); 
@@ -43,18 +50,33 @@ export const fetchForms = async () => {
 //   });
 //   return response.data;
 // };
-export const createForm = async (formFields) => {
-  const response = await axios.post(
-    `${API_URL}/api/v1/form_fields`,
-    { form_fields: formFields }, // Ensure payload matches the required structure
-    {
-      headers: {
-        Authorization: `Bearer ${getAuthToken()}`, // Include the authorization token
-      },
+export const useCreateForm = () => {
+  const navigate = useNavigate();
+
+  const createForm = async (formFields) => {
+    const token = localStorage.getItem('token');
+
+    try {
+      const response = await axios.post(`${API_URL}/api/v1/form_fields`, { form_fields: formFields }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        localStorage.removeItem('token');
+        navigate('/login', { state: { from: window.location.pathname } });
+      } else {
+        throw error;
+      }
     }
-  );
-  return response.data;
+  };
+
+  return { createForm };
 };
+
+
 
 
 export const updateFormField = async (formId, formFieldId, formField) => {

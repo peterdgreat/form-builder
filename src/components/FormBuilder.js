@@ -5,11 +5,13 @@ import Toolbox from './ToolBox';
 import FormField from './FormField';
 import { useNavigate } from 'react-router-dom';
 
-import { createForm } from '../api';
+import { useCreateForm } from '../api';
 
 const FormBuilder = () => {
   const [formItems, setFormItems] = useState([]);
   const [previewMode, setPreviewMode] = useState(false);
+  const { createForm } = useCreateForm();
+
   const navigate = useNavigate(); //
   const [, drop] = useDrop(() => ({
     accept: [
@@ -60,6 +62,7 @@ const FormBuilder = () => {
 
   return (
     <div style={{ display: 'flex' }}>
+      
       <Toolbox /> {/* Add Toolbox */}
       <div
         ref={drop}
