@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash, faEdit, faSave } from '@fortawesome/free-solid-svg-icons';
 
 const FormField = ({ field, previewMode, onDelete, onUpdateLabel, onUpdatePlaceholder, onUpdateOptions }) => {
   const [newOption, setNewOption] = useState('');
   const [editingOptionIndex, setEditingOptionIndex] = useState(null);
   const [editingOptionValue, setEditingOptionValue] = useState('');
+  const [showDetails, setShowDetails] = useState(false);
 
   const handleAddOption = () => {
     if (newOption.trim()) {
@@ -26,7 +29,7 @@ const FormField = ({ field, previewMode, onDelete, onUpdateLabel, onUpdatePlaceh
   };
 
   const renderInput = () => {
-    switch (field.field_type) { // Use field_type instead of type
+    switch (field.field_type) {
       case 'text':
       case 'email':
       case 'number':
@@ -37,7 +40,7 @@ const FormField = ({ field, previewMode, onDelete, onUpdateLabel, onUpdatePlaceh
         return <input type={field.field_type} disabled={true} readOnly={true} />;
       case 'dropdown':
         return (
-          <select>
+          <select disabled={true}>
             {field.options.map((option, index) => (
               <option key={index}>{option}</option>
             ))}
@@ -56,10 +59,23 @@ const FormField = ({ field, previewMode, onDelete, onUpdateLabel, onUpdatePlaceh
 
   return (
     <div style={{ marginBottom: '16px', padding: '8px', border: '1px solid #ccc', borderRadius: '4px', backgroundColor: previewMode ? '#e9ecef' : '#ffffff' }}>
-      <label>{field.label}</label>
+      <div className="form-field-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <label style={{ fontWeight: 'bold' }}>{field.label}</label>
+        {!previewMode && (
+          <div className="form-field-actions">
+            <button onClick={() => setShowDetails(!showDetails)} style={{ marginRight: '8px', background: 'none', border: 'none', cursor: 'pointer' }}>
+              <FontAwesomeIcon icon={faEdit} style={{ color: '#007bff' }} />
+            </button>
+            <button onClick={onDelete} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
+              <FontAwesomeIcon icon={faTrash} style={{ color: '#dc3545' }} />
+            </button>
+          </div>
+        )}
+      </div>
       {renderInput()}
-      {!previewMode && (
-        <div>
+      {!previewMode && showDetails && (
+        <div className="form-field-details" style={{ marginTop: '16px' }}>
+          <label>Label</label>
           <input
             type="text"
             value={field.label}
@@ -67,7 +83,15 @@ const FormField = ({ field, previewMode, onDelete, onUpdateLabel, onUpdatePlaceh
             placeholder="Label"
             style={{ marginBottom: '8px', width: '100%' }}
           />
-          {field.field_type === 'dropdown' && ( // Check for field_type instead of type
+          <label>Placeholder</label>
+          <input
+            type="text"
+            value={field.placeholder}
+            onChange={(e) => onUpdatePlaceholder(e.target.value)}
+            placeholder="Placeholder"
+            style={{ marginBottom: '8px', width: '100%' }}
+          />
+          {field.field_type === 'dropdown' && (
             <div>
               {field.options.map((option, index) => (
                 <div key={index} style={{ display: 'flex', alignItems: 'center', marginBottom: '8px' }}>
@@ -94,7 +118,7 @@ const FormField = ({ field, previewMode, onDelete, onUpdateLabel, onUpdatePlaceh
                         cursor: 'pointer'
                       }}
                     >
-                      Save
+                      <FontAwesomeIcon icon={faSave} />
                     </button>
                   ) : (
                     <button
@@ -109,7 +133,7 @@ const FormField = ({ field, previewMode, onDelete, onUpdateLabel, onUpdatePlaceh
                         cursor: 'pointer'
                       }}
                     >
-                      Edit
+                      <FontAwesomeIcon icon={faEdit} />
                     </button>
                   )}
                 </div>
@@ -138,20 +162,6 @@ const FormField = ({ field, previewMode, onDelete, onUpdateLabel, onUpdatePlaceh
               </button>
             </div>
           )}
-          <button
-            onClick={onDelete}
-            style={{
-              marginTop: '8px',
-              backgroundColor: '#dc3545',
-              color: 'white',
-              border: 'none',
-              padding: '8px',
-              borderRadius: '4px',
-              cursor: 'pointer'
-            }}
-          >
-            Delete
-          </button>
         </div>
       )}
     </div>
