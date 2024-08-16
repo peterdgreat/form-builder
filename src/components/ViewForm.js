@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { fetchForms } from '../api';
+import { fetchForms, API_URL } from '../api';
 
 const ViewForms = () => {
   const [forms, setForms] = useState([]);
@@ -8,11 +8,11 @@ const ViewForms = () => {
     const loadForms = async () => {
       try {
         const fetchedForms = await fetchForms();
-        console.log("fetched",fetchedForms)
+       
         setForms(fetchedForms);
-        console.log("sett",forms)
+      
       } catch (error) {
-        console.error('Error fetching forms:', error);
+        // console.error('Error fetching forms:', error);
       }
     };
 
@@ -51,10 +51,22 @@ const ViewForms = () => {
         return <div>Unknown Form Item</div>;
     }
   };
+  const generateEmbedCode = (slug) => {
+    const embedUrl = `${API_URL}/api/v1/forms/${slug}`;
+    return `<iframe src="${embedUrl}" width="100%" height="500px" frameborder="0"></iframe>`;
+  };
+
+  const handleShareClick = (slug) => {
+    const embedCode = generateEmbedCode(slug);
+    navigator.clipboard.writeText(embedCode);
+    alert('Embed code copied to clipboard!');
+  };
+
 
   return (
     <div>
       <h2>View Forms</h2>
+      
       {forms.map((form) => (
         <div key={form.id} style={{ marginBottom: '24px', padding: '16px', border: '1px solid #ccc' }}>
           <h3>{form.title}</h3>
@@ -64,10 +76,12 @@ const ViewForms = () => {
               {renderFormField(field)}
             </div>
           ))}
+          <button onClick={() => handleShareClick(form.slug)}>Share/Embed</button>
         </div>
       ))}
     </div>
   );
+
 };
 
 export default ViewForms;
