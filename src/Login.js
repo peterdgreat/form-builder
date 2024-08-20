@@ -96,6 +96,18 @@ const Login = ({ setToken }) => {
         }}>
           Log In
         </button>
+        <div style={{ marginTop: '20px' }}>
+          Not registered? 
+          <span 
+            onClick={() => navigate('/register')}
+            style={{
+              color: '#0062ff',
+              cursor: 'pointer',
+              marginLeft: '5px'
+            }}>
+            Sign Up
+          </span>
+        </div>
       </div>
     </div>
   );
