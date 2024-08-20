@@ -101,7 +101,7 @@ const FormBuilder = () => {
     };
 
     try {
-      const response = await createForm(payload.form_fields);
+      await createForm(payload.form_fields);
       alert("Form and fields saved successfully!");
     } catch (error) {
       alert("Error saving form.");
