@@ -1,7 +1,8 @@
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import config from "./config";
 
-export const API_URL = "http://localhost:3001";
+export const API_URL = config.API_URL;
 
 // User Registration
 export const registerUser = async (email, password) => {
@@ -27,6 +28,7 @@ const setupAxiosInterceptors = (navigate) => {
 };
 
 export const loginUser = async (email, password) => {
+  console.log(API_URL)
   try {
     const response = await axios.post(`${API_URL}/users/sign_in`, {
       user: { email, password },

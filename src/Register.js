@@ -95,6 +95,18 @@ const Register = () => {
         }}>
           Create Account
         </button>
+        <div style={{ marginTop: '20px' }}>
+          Already a member? 
+          <span 
+            onClick={() => navigate('/login')}
+            style={{
+              color: '#0062ff',
+              cursor: 'pointer',
+              marginLeft: '5px'
+            }}>
+            Log In
+          </span>
+        </div>
       </div>
     </div>
   );
