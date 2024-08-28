@@ -16,7 +16,7 @@ const Login = ({ setToken }) => {
       setToken(data.token);
       navigate('/form-builder');
     } catch (error) {
-      alert('Login failed.');
+      alert(error.message);
     }
   };
 

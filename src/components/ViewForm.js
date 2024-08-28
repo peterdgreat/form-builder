@@ -12,7 +12,7 @@ const ViewForms = () => {
       setForms(forms.filter((form) => form.id !== id));
       alert("Form deleted successfully!");
     } catch (error) {
-      alert("Failed to delete form.");
+      alert(error.message);
     }
   };
   useEffect(() => {
@@ -20,7 +20,9 @@ const ViewForms = () => {
       try {
         const fetchedForms = await fetchForms();
         setForms(fetchedForms);
-      } catch (error) {}
+      } catch (error) {
+        alert(error.message);
+      }
     };
 
     loadForms();
